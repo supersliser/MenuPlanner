@@ -1,0 +1,41 @@
+﻿body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+}
+ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    list-style: none;
+    width: 100%;
+    background-color: dodgerblue;
+    padding: 0px;
+    margin: 0px;
+    border-width: 0;
+}
+
+a {
+    width: 100%;
+    text-align: center;
+    color: white;
+    background-color: rgba(0,0,0,0);
+    text-decoration: none;
+    height: 100%;
+    text-decoration-line: none;
+}
+
+li {
+    width: 100%;
+    border-right:solid 2px white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+a:hover {
+    background-color: rgba(0,0,0,0.1);
+}
