@@ -18,6 +18,22 @@ namespace MenuPlanner
     {
         public Client client;
 
+        public static List<Meal> RandomizeList(List<Meal> list)
+        {
+            Random random = new Random();
+            for (int i = list.Count - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
+                // Swap the items at positions i and j
+                Meal temp = list[i];
+                list[i] = list[j];
+                list[j] = temp;
+            }
+
+            return list;
+        }
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             var options = new Supabase.SupabaseOptions
@@ -92,7 +108,7 @@ namespace MenuPlanner
                 }
                 meals.Add(temp);
             }
-
+            meals = RandomizeList(meals);
 
 
             int redMeatCount = 0;
@@ -163,7 +179,7 @@ namespace MenuPlanner
                 var tempMeal = meals[count];
                 if (days.Contains(tempMeal)) 
                 { 
-                    failCount++; 
+                    failCount+= failMax; 
                 }
                 if (Today.DayOfWeek == DayOfWeek.Sunday && (tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
                 {
