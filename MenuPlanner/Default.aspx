@@ -5,6 +5,8 @@
 
     <div class="calender">
         <asp:Calendar ID="Calendar1" runat="server" Height="80%" Width="60%" OnSelectionChanged="Calendar1_SelectionChanged" />
+        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Calculate Week" Width="288px" />
+        <asp:Button ID="Button2" runat="server" OnClick="Button2_Click" Text="Calculate Month" Width="327px" />
     </div>
     <div id="MealContainer">
             <asp:Label ID="MealItem" runat="server" Text="Meal"></asp:Label>

@@ -181,10 +181,15 @@ namespace MenuPlanner
                 { 
                     failCount+= failMax; 
                 }
-                if (Today.DayOfWeek == DayOfWeek.Sunday && (tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
+                if (Today.DayOfWeek == DayOfWeek.Sunday && !(tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
                 {
                     failCount += failMax;
                 }
+                //if (Today.DayOfWeek != DayOfWeek.Sunday && (tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
+                //{
+                //    failCount += failMax;
+                //}
+
 
                 bool rm = false;
                 bool wm = false;
@@ -375,6 +380,42 @@ namespace MenuPlanner
                     .Where(x => x.AttributeID == AttributeID)
                     .Get();
                 Attribute = request.Model.Name;
+            }
+        }
+
+        protected async void Button1_Click(object sender, EventArgs e)
+        {
+            for (DateTime i = DateTime.Today; 
+                i != DateTime.Today.AddDays(7); 
+                i = i.AddDays(1))
+            {
+                string test = i.Date.ToString("yyyy-MM-dd");
+                var request = await client
+                    .From<supabaseDate>()
+                    .Select("*")
+                    .Where(x => x.Date == test)
+                    .Get();
+                if (request.Model == null)
+                {
+                    await GenerateItems(i);
+                }
+            }
+        }
+
+        protected async void Button2_Click(object sender, EventArgs e)
+        {
+            for (DateTime i = DateTime.Today.Date; i != DateTime.Today.Date.AddDays(28); i = i.AddDays(1))
+            {
+                string test = i.Date.ToString("yyyy-MM-dd");
+                var request = await client
+                    .From<supabaseDate>()
+                    .Select("*")
+                    .Where(x => x.Date == test)
+                    .Get();
+                if (request.Model == null)
+                {
+                    await GenerateItems(i);
+                }
             }
         }
     }
