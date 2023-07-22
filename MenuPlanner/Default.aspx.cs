@@ -185,10 +185,10 @@ namespace MenuPlanner
                 {
                     failCount += failMax;
                 }
-                //if (Today.DayOfWeek != DayOfWeek.Sunday && (tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
-                //{
-                //    failCount += failMax;
-                //}
+                if (Today.DayOfWeek != DayOfWeek.Sunday && (tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
+                {
+                    failCount += failMax;
+                }
 
 
                 bool rm = false;
