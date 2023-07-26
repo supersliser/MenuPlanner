@@ -45,13 +45,13 @@ namespace MenuPlanner
 
         protected async Task GenerateItems(DateTime Today)
         {
-            Meal[] days = new Meal[4];
+            Meal[] days = new Meal[7];
             var request = await client
                 .From<supabaseDate>()
                 .Select("*")
                 .Order(x => x.Date, Postgrest.Constants.Ordering.Descending)
                 .Get();
-            for (int i = 0; i <= 3; i++)
+            for (int i = 0; i < days.Length - 1; i++)
             {
                 var test = request.Models[i].MealID;
                 var MealRequest = await client
