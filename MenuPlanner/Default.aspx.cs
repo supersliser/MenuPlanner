@@ -178,7 +178,14 @@ namespace MenuPlanner
             {
                 if (count >= 30)
                 {
-                    finalMeal = meals[new Random().Next(meals.Count)];
+                    if (Today.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        finalMeal = meals.Find(x => x.MealItem.Name.Contains("Roast"));
+                    }
+                    else
+                    {
+                        finalMeal = meals[new Random().Next(meals.Count)];
+                    }
                     failCount = -5000;
                 }
                 else
@@ -253,7 +260,7 @@ namespace MenuPlanner
             }
             while (failCount >= failMax);
 
-            if (failCount < failMax && finalMeal == new Meal())
+            if (finalMeal.MealItem == null)
             {
                 finalMeal = meals[count - 1];
             }
