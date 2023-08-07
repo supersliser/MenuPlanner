@@ -4,6 +4,7 @@ using Postgrest.Models;
 using Supabase;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -51,7 +52,7 @@ namespace MenuPlanner
                 .Select("*")
                 .Order(x => x.Date, Postgrest.Constants.Ordering.Descending)
                 .Get();
-            for (int i = 0; i < days.Length - 1; i++)
+            for (int i = 0; i < days.Length; i++)
             {
                 var test = request.Models[i].MealID;
                 var MealRequest = await client
@@ -175,76 +176,84 @@ namespace MenuPlanner
             const int failMax = 1;
             do
             {
-                failCount = 0;
-                var tempMeal = meals[count];
-                if (days.Contains(tempMeal)) 
-                { 
-                    failCount+= failMax; 
-                }
-                if (Today.DayOfWeek == DayOfWeek.Sunday && !(tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
+                if (count >= 30)
                 {
-                    failCount += failMax;
+                    finalMeal = meals[new Random().Next(meals.Count)];
+                    failCount = -5000;
                 }
-                if (Today.DayOfWeek != DayOfWeek.Sunday && (tempMeal.MealItem.MealID == 2 || tempMeal.MealItem.MealID == 26 || tempMeal.MealItem.MealID == 27 || tempMeal.MealItem.MealID == 28 || tempMeal.MealItem.MealID == 29 || tempMeal.MealItem.MealID == 30))
+                else
                 {
-                    failCount += failMax;
-                }
+                    failCount = 0;
+                    var tempMeal = meals[count];
+                    if (days.Contains(tempMeal))
+                    {
+                        failCount += failMax;
+                    }
+                    if (Today.DayOfWeek == DayOfWeek.Sunday && !tempMeal.MealItem.Name.Contains("Roast"))
+                    {
+                        failCount += failMax;
+                    }
+                    if (Today.DayOfWeek != DayOfWeek.Sunday && tempMeal.MealItem.Name.Contains("Roast"))
+                    {
+                        failCount += failMax;
+                    }
 
 
-                bool rm = false;
-                bool wm = false;
-                bool vg = false;
-                bool pa = false;
-                bool fs = false;
-                foreach (var item in tempMeal.Ingredients)
-                {
+                    bool rm = false;
+                    bool wm = false;
+                    bool vg = false;
+                    bool pa = false;
+                    bool fs = false;
+                    foreach (var item in tempMeal.Ingredients)
+                    {
 
-                    if (item.Attribute == "Red Meat" && redMeatCount >= 2)
-                    {
-                        if (rm == false)
+                        if (item.Attribute == "Red Meat" && redMeatCount >= 2)
                         {
-                            failCount++;
-                            rm = true;
+                            if (rm == false)
+                            {
+                                failCount++;
+                                rm = true;
+                            }
+                        }
+                        if (item.Attribute == "White Meat" && whiteMeatCount >= 2)
+                        {
+                            if (wm == false)
+                            {
+                                failCount++;
+                                wm = true;
+                            }
+                        }
+                        //if (item.Attribute == "Vegetable" && vegetableCount <= 3) 
+                        //{
+                        //    if (vg == false)
+                        //    {
+                        //        failCount++;
+                        //        vg = true;
+                        //    }
+                        //}
+                        if (item.Attribute == "Pasta" && pastaCount >= 1)
+                        {
+                            if (pa == false)
+                            {
+                                failCount++;
+                                pa = true;
+                            }
+                        }
+                        if (item.Attribute == "Fish" && fishCount >= 1)
+                        {
+                            if (fs == false)
+                            {
+                                failCount++;
+                                fs = true;
+                            }
                         }
                     }
-                    if (item.Attribute == "White Meat" && whiteMeatCount >= 2) 
-                    {
-                        if (wm == false)
-                        {
-                            failCount++;
-                            wm = true;
-                        }
-                    }
-                    //if (item.Attribute == "Vegetable" && vegetableCount <= 3) 
-                    //{
-                    //    if (vg == false)
-                    //    {
-                    //        failCount++;
-                    //        vg = true;
-                    //    }
-                    //}
-                    if (item.Attribute == "Pasta" && pastaCount >= 1)
-                    {
-                        if (pa == false)
-                        {
-                            failCount++;
-                            pa = true;
-                        }
-                    }
-                    if (item.Attribute == "Fish" && fishCount >= 1) 
-                    {
-                        if (fs == false)
-                        {
-                            failCount++;
-                            fs = true;
-                        }
-                    }
+                    count++;
                 }
-                count++;
             }
             while (failCount >= failMax);
 
-            if (failCount < failMax)
+            if (failCount < failMax && finalMeal == new Meal())
             {
                 finalMeal = meals[count - 1];
             }
